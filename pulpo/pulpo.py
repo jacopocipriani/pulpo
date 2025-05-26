@@ -181,6 +181,12 @@ class PulpoOptimizer:
         """
         saver.summarize_results(self, zeroes)
 
+    def summarize_choices(self, zeroes=False):
+        """
+        Shows the choices made in the optimization.
+        """
+        saver.summarize_choices(self, zeroes)
+
 
 def electricity_showcase():
     """

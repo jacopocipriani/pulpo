@@ -240,3 +240,38 @@ def summarize_results(worker: Any, zeroes: bool = False) -> None:
 
     if not constraints_found:
         display("No constraint data to display.")
+
+
+
+def summarize_choices(worker: Any, zeroes: bool = False) -> None:
+    """
+    Displays only the choices made by the worker.
+    Shows each choice name and its corresponding data frame,
+    filtering out zero-value rows when zeroes=True.
+    """
+
+    try:
+        from IPython.display import display, Markdown
+    except ImportError:
+        display = print
+        Markdown = lambda x: x
+
+    # Extract all results
+    result_data = extract_results(worker)
+
+    # Helper to filter out zero-value rows if requested
+    def filter_nonzero(df):
+        return df[df["Value"] != 0] if zeroes and "Value" in df.columns else df
+
+    # Display Choices Made
+    choices_dict = result_data.get("Choices", {})
+    display(Markdown("## Choices Made"))
+
+    if choices_dict:
+        for choice_name, df in choices_dict.items():
+            df = filter_nonzero(df)
+            display(Markdown(f"### {choice_name}"))
+            display(df)
+    else:
+        display("No choices data available.")
+
